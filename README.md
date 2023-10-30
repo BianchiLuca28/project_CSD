@@ -1,5 +1,5 @@
 
-![Logo](https://www.schnell.it/gallery-schnell/news/SchnellSPA_2018.jpg)
+![Logo](https://www.schnell.it/footer/01_Schnell.png)
 
 
 # Detecting anomalities in Time Series
