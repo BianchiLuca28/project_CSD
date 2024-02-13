@@ -1,0 +1,1 @@
+Usate il modello "pruned_", è quello con meno overfitting.
