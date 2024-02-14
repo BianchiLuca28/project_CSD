@@ -82,9 +82,9 @@ if uploaded_file is not None:
     dff = df.copy()
 
     # Value columns of the dataframe
-    value_columns = dff.columns.to_list()
-    value_columns.remove('Acquisition_Number')
-    value_columns.remove('Discrete_Time')
+    value_columns = ['Board1Acc1', 'Board1Acc2', 'Board1Acc3',
+                   'Board2Acc1', 'Board2Acc2', 'Board2Acc3',
+                   'Board3Acc1', 'Board3Acc2', 'Board3Acc3']
 
     # Visualize time series
     with col1:
