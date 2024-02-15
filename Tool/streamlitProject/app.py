@@ -3,17 +3,12 @@
 
 
 import streamlit as st
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from statsmodels.tsa.seasonal import seasonal_decompose
 import pickle
-
-# from sklearn_pandas import DataFrameMapper
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import GridSearchCV
 
 # Function to decompose time series and display sub-time series
 def decompose_and_display(data, selected_column):
@@ -63,6 +58,41 @@ def visualize_time_series(data, selected_column):
     st.subheader(f"Time Series Visualization for {selected_column}:")
     st.plotly_chart(fig, use_container_width=True)
 
+# Function to preprocess the time series after loaded
+def preprocessing(time_series):
+    time_series_copy = time_series.copy()
+
+    # Define value columns with all 3 axes
+    columns_all_acc = ['Board1Acc1X', 'Board1Acc1Y', 'Board1Acc1Z',
+           'Board1Acc2X', 'Board1Acc2Y', 'Board1Acc2Z',
+           'Board1Acc3X', 'Board1Acc3Y', 'Board1Acc3Z',
+           'Board2Acc1X', 'Board2Acc1Y', 'Board2Acc1Z',
+           'Board2Acc2X', 'Board2Acc2Y', 'Board2Acc2Z',
+           'Board2Acc3X', 'Board2Acc3Y', 'Board2Acc3Z',
+           'Board3Acc1X', 'Board3Acc1Y', 'Board3Acc1Z',
+           'Board3Acc2X', 'Board3Acc2Y', 'Board3Acc2Z',
+           'Board3Acc3X', 'Board3Acc3Y', 'Board3Acc3Z']
+    
+    # Discard the columns that are not needed
+    time_series_copy = time_series_copy[['Acquisition_Number', 'Discrete_Time'] + columns_all_acc]
+
+    # Drop duplicates
+    time_series_copy.drop_duplicates(inplace=True)
+
+    # Standardize the time series using the saved scaler
+    with open('../../saved_models/scaler_axes.pkl', 'rb') as scaler_file:
+        scaler = pickle.load(scaler_file)
+        print("Scaler loaded successfully!")
+        time_series_copy[columns_all_acc] = scaler.transform(time_series_copy[columns_all_acc])
+
+    # Consider the norm for each 3 axes of the time series
+    for column in value_columns:
+      time_series_copy[column] = np.sqrt(np.square(time_series_copy[column + 'X']) 
+                                    + np.square(time_series_copy[column + 'Y']) 
+                                    + np.square(time_series_copy[column + 'Y']))
+
+    # Return the decomposed time series with only the new normed columns
+    return time_series_copy[['Acquisition_Number', 'Discrete_Time'] + value_columns]
 
 # Set page configuration to make the interface wider
 st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
@@ -81,10 +111,13 @@ if uploaded_file is not None:
     df = pd.read_csv(uploaded_file, sep=";")
     dff = df.copy()
 
-    # Value columns of the dataframe
+    # Value columns of the dataframe to be used
     value_columns = ['Board1Acc1', 'Board1Acc2', 'Board1Acc3',
                    'Board2Acc1', 'Board2Acc2', 'Board2Acc3',
                    'Board3Acc1', 'Board3Acc2', 'Board3Acc3']
+
+    # Apply preprocessing to the time series
+    dff = preprocessing(dff)
 
     # Visualize time series
     with col1:
@@ -97,32 +130,52 @@ if uploaded_file is not None:
 
 # Classify data
 if uploaded_file is not None:
+    # On the second column add the classifier and the button to classify the time series
     with col2:
         st.subheader("Classify Time Series:")
+        # Load the model
         with open('../../saved_models/pruned_classifier_model.pkl', 'rb') as model_file:
             model = pickle.load(model_file)
             print("Model loaded successfully!")
-            print(model)
         
         # Add a button to classify time series as anomaly or not
-        if st.button("Predict Anomalies"):
-            # Predict anomalies
-            predictions = model.predict(dff)
+        if st.button("Classify Time Series"):
+            # Load and apply PCA to the time series
+            with open('../../saved_models/pca_transformer.pkl', 'rb') as pca_file:
+                pca = pickle.load(pca_file)
+                print("PCA loaded successfully!")
+                principalComponents = pca.fit_transform(dff)
+                principalDf = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
+            
+            st.subheader("Time Series Classification:")
 
-            # Display predictions
-            st.subheader("Anomaly Predictions:")
-            st.write(predictions)
+            # Predict anomalies using principal components 1 and 2
+            predictions = model.predict(principalDf)
+            
+            # Calculate the percentage of anomalies
+            percentage_anomalies = (predictions == "guasto").sum() / len(predictions) * 100
+
+            # Display pie chart
+            fig_pie = go.Figure(data=[go.Pie(labels=['Anomalies', 'Normal'],
+                                             values=[percentage_anomalies, 100 - percentage_anomalies],
+                                             hole=0.3,
+                                             marker_colors=['#FF6347', '#4CAF50'])])
+
+            fig_pie.update_layout(width=300, height=300)
+
+            st.plotly_chart(fig_pie)
         
-        # Display statistics on the main page in a styled container
-        st.markdown("## Time Series Statistics", unsafe_allow_html=True)
+
+        # Displayed statistics below the "prediction section"
+        st.subheader("Time Series Statistics:")
         st.markdown(f"**Selected Column:** {selected_column}")
-        st.markdown(f"**Mean:** {df[selected_column].mean()}")
-        st.markdown(f"**Variance:** {df[selected_column].var()}")
-        st.markdown(f"**Minimum:** {df[selected_column].min()}")
-        st.markdown(f"**Maximum:** {df[selected_column].max()}")
+        st.markdown(f"**Mean:** {dff[selected_column].mean()}")
+        st.markdown(f"**Variance:** {dff[selected_column].var()}")
+        st.markdown(f"**Minimum:** {dff[selected_column].min()}")
+        st.markdown(f"**Maximum:** {dff[selected_column].max()}")
         # Add more statistics as needed
 
-# Decompose time series
+# Decompose time series into trend and residual components
 if uploaded_file is not None:
     st.subheader(f"Decomposed Time Series for {selected_column}:")
     decompose_and_display(dff, selected_column)
