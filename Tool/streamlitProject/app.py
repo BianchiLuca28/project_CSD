@@ -127,7 +127,7 @@ if uploaded_file is not None:
             with open('../../saved_models/pca_transformer.pkl', 'rb') as pca_file:
                 pca = pickle.load(pca_file)
                 print("PCA loaded successfully!")
-                principalComponents = pca.fit_transform(dff[['Acquisition_Number','Discrete_Time'] + value_columns])
+                principalComponents = pca.transform(dff[value_columns])
                 principalDf = pd.DataFrame(data = principalComponents, columns = ['principal_component_1', 'principal_component_2'])
             
             st.subheader("Time Series Classification:")
