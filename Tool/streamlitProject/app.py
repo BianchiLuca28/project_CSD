@@ -61,8 +61,20 @@ def visualize_time_series(data, selected_column):
 # Set page configuration to make the interface wider
 st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
 
-# Page title
-st.title("T-Sentry")
+# Inserting the logo and title in the same row with adjusted padding
+col1, col2, col3 = st.columns([2, 4, 11])
+
+# Inserting the logo in the first column with reduced padding
+with col1:
+    unicam_logo = st.image("images/logo_unicam.png", width=100, use_column_width='never')
+
+# Adding the logo in the second column and centering it vertically
+with col2:
+    schnel_logo = st.image("images/Schnell_logo.png", width=300, use_column_width='never')
+
+# Adding the title in the third column
+with col3:
+    st.title("T-Sentry")
 
 # File upload
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
