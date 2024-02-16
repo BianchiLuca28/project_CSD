@@ -38,25 +38,35 @@ def decompose_and_display(data, selected_column):
 
 # Function to load and visualize time series data with Plotly
 def visualize_time_series(data, selected_column):
+    # Calculate Q1 and Q3
+    Q1 = data[selected_column].quantile(0.25)
+    Q3 = data[selected_column].quantile(0.75)
+    IQR = Q3 - Q1
+
+    # Define bounds for outliers
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+
+    # Identify points outside the bounds
+    outliers = data[(data[selected_column] < lower_bound) | (data[selected_column] > upper_bound)]
+
     # Create a scatter plot for the entire time series
     fig = go.Figure()
 
     # Add a line trace for the entire time series
     fig.add_trace(go.Scatter(x=data['Discrete_Time'], y=data[selected_column], mode='lines', name='Time Series'))
 
-    # Identify points lower than 0.85 and higher than 1.05
-    below_threshold = data[data[selected_column] < 0.83]
-    above_threshold = data[data[selected_column] > 1.075]
-
-    # Add scatter traces for points below 0.85 and above 1.05
-    fig.add_trace(go.Scatter(x=below_threshold['Discrete_Time'], y=below_threshold[selected_column], mode='markers', marker=dict(color='red'), name='Below 0.83'))
-    fig.add_trace(go.Scatter(x=above_threshold['Discrete_Time'], y=above_threshold[selected_column], mode='markers', marker=dict(color='red'), name='Above 1.075'))
+    # Add scatter trace for outliers
+    fig.add_trace(
+        go.Scatter(x=outliers['Discrete_Time'], y=outliers[selected_column], mode='markers', marker=dict(color='red'),
+                   name='Outliers'))
 
     # Set layout options
-    fig.update_layout(width=800, showlegend=True)
-    
+    fig.update_layout(showlegend=True)
+
     st.subheader(f"Time Series Visualization for {selected_column}:")
     st.plotly_chart(fig, use_container_width=True)
+
 
 # Set page configuration to make the interface wider
 st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
