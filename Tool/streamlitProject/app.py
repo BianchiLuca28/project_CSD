@@ -1,6 +1,6 @@
 # Launch the app using the following command (using the terminal):
 # python -m streamlit run app.py
-
+import base64
 
 import streamlit as st
 import numpy as np
@@ -61,20 +61,72 @@ def visualize_time_series(data, selected_column):
 # Set page configuration to make the interface wider
 st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
 
-# Inserting the logo and title in the same row with adjusted padding
-col1, col2, col3 = st.columns([2, 4, 11])
 
-# Inserting the logo in the first column with reduced padding
-with col1:
-    unicam_logo = st.image("images/logo_unicam.png", width=100, use_column_width='never')
+LOGO_IMAGE = "images/logo_sentry_transparent.png"
+LOGO_TITLE = "T-Sentry"
+UNICAM_LOGO = "images/logo_unicam.png"
+SCHNELL_LOGO = "images/logo_Schnell.png"
 
-# Adding the logo in the second column and centering it vertically
-with col2:
-    schnel_logo = st.image("images/Schnell_logo.png", width=300, use_column_width='never')
+st.markdown(
+    """
+    <style>
+    .headerContainer {
+        display: flex;
+        justify-content: space-between;
+    }
+    .logoContainer {
+        display: flex;
+        align-items: center;
+    }
+    .companiesContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center items horizontally */
+        text-align: center; /* Center text horizontally */
+    }
+    .title-logo-text {
+        font-weight: 700 !important;
+        font-size: 70px !important;
+        padding-top: 0px;
+        margin-bottom: 0px;
+    }
+    .title-logo-img {
+        width: 150px;
+        height: 150px;
+    }
+    .company-logo-img {
+        max-height: 100px; 
+        width: auto;
+        margin-bottom: 10px; 
+    }
+    .collaboration-text {
+        font-size: 25px; 
+        margin-bottom: 5px; 
+        text-align: center; 
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-# Adding the title in the third column
-with col3:
-    st.title("T-Sentry")
+st.markdown(
+    f"""
+    <div class="headerContainer">
+        <div class="logoContainer">
+            <img class="title-logo-img" src="data:image/png;base64,{base64.b64encode(open(LOGO_IMAGE, "rb").read()).decode()}">
+            <p class="title-logo-text">{LOGO_TITLE}</p>
+        </div>
+        <div class="companiesContainer">
+            <p class="collaboration-text">In collaboration with:</p>
+            <div>
+                <img class="company-logo-img" src="data:image/png;base64,{base64.b64encode(open(UNICAM_LOGO, "rb").read()).decode()}">
+                <img class="company-logo-img" src="data:image/png;base64,{base64.b64encode(open(SCHNELL_LOGO, "rb").read()).decode()}">
+            </div>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # File upload
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
