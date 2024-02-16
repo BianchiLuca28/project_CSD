@@ -58,42 +58,6 @@ def visualize_time_series(data, selected_column):
     st.subheader(f"Time Series Visualization for {selected_column}:")
     st.plotly_chart(fig, use_container_width=True)
 
-# Function to preprocess the time series after loaded
-def preprocessing(time_series):
-    time_series_copy = time_series.copy()
-
-    # Define value columns with all 3 axes
-    columns_all_acc = ['Board1Acc1X', 'Board1Acc1Y', 'Board1Acc1Z',
-           'Board1Acc2X', 'Board1Acc2Y', 'Board1Acc2Z',
-           'Board1Acc3X', 'Board1Acc3Y', 'Board1Acc3Z',
-           'Board2Acc1X', 'Board2Acc1Y', 'Board2Acc1Z',
-           'Board2Acc2X', 'Board2Acc2Y', 'Board2Acc2Z',
-           'Board2Acc3X', 'Board2Acc3Y', 'Board2Acc3Z',
-           'Board3Acc1X', 'Board3Acc1Y', 'Board3Acc1Z',
-           'Board3Acc2X', 'Board3Acc2Y', 'Board3Acc2Z',
-           'Board3Acc3X', 'Board3Acc3Y', 'Board3Acc3Z']
-    
-    # Discard the columns that are not needed
-    time_series_copy = time_series_copy[['Acquisition_Number', 'Discrete_Time'] + columns_all_acc]
-
-    # Drop duplicates
-    time_series_copy.drop_duplicates(inplace=True)
-
-    # Standardize the time series using the saved scaler
-    with open('../../saved_models/scaler_axes.pkl', 'rb') as scaler_file:
-        scaler = pickle.load(scaler_file)
-        print("Scaler loaded successfully!")
-        time_series_copy[columns_all_acc] = scaler.transform(time_series_copy[columns_all_acc])
-
-    # Consider the norm for each 3 axes of the time series
-    for column in value_columns:
-      time_series_copy[column] = np.sqrt(np.square(time_series_copy[column + 'X']) 
-                                    + np.square(time_series_copy[column + 'Y']) 
-                                    + np.square(time_series_copy[column + 'Y']))
-
-    # Return the decomposed time series with only the new normed columns
-    return time_series_copy[['Acquisition_Number', 'Discrete_Time'] + value_columns]
-
 # Set page configuration to make the interface wider
 st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
 
@@ -115,9 +79,6 @@ if uploaded_file is not None:
     value_columns = ['Board1Acc1', 'Board1Acc2', 'Board1Acc3',
                    'Board2Acc1', 'Board2Acc2', 'Board2Acc3',
                    'Board3Acc1', 'Board3Acc2', 'Board3Acc3']
-
-    # Apply preprocessing to the time series
-    dff = preprocessing(dff)
 
     # Visualize time series
     with col1:
@@ -144,8 +105,8 @@ if uploaded_file is not None:
             with open('../../saved_models/pca_transformer.pkl', 'rb') as pca_file:
                 pca = pickle.load(pca_file)
                 print("PCA loaded successfully!")
-                principalComponents = pca.fit_transform(dff)
-                principalDf = pd.DataFrame(data = principalComponents, columns = ['principal component 1', 'principal component 2'])
+                principalComponents = pca.fit_transform(dff[['Acquisition_Number','Discrete_Time'] + value_columns])
+                principalDf = pd.DataFrame(data = principalComponents, columns = ['principal_component_1', 'principal_component_2'])
             
             st.subheader("Time Series Classification:")
 
