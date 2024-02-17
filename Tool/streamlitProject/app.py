@@ -7,6 +7,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from statsmodels.tsa.seasonal import seasonal_decompose
 import pickle
+import time
 
 # Function to decompose time series and display sub-time series
 def decompose_and_display(data, selected_column):
@@ -112,6 +113,16 @@ st.markdown(
         margin-bottom: 5px; 
         text-align: center; 
     }
+    .statistics-container {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #d3d3d3;
+        padding: 10px;
+        padding-left: 30px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -140,7 +151,7 @@ st.markdown(
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
 # Divide the space into two columns
-col1, col2 = st.columns([2, 1])
+col1, col2 = st.columns([2, 1], gap="large")
 
 if uploaded_file is not None:
     # Load data
@@ -196,17 +207,22 @@ if uploaded_file is not None:
 
             fig_pie.update_layout(width=300, height=300)
 
+            # st.success('Time Series classified successfully!')
             st.plotly_chart(fig_pie)
         
-
-        # Displayed statistics below the "prediction section"
-        st.subheader("Time Series Statistics:")
-        st.markdown(f"**Selected Column:** {selected_column}")
-        st.markdown(f"**Mean:** {dff[selected_column].mean()}")
-        st.markdown(f"**Variance:** {dff[selected_column].var()}")
-        st.markdown(f"**Minimum:** {dff[selected_column].min()}")
-        st.markdown(f"**Maximum:** {dff[selected_column].max()}")
-        # Add more statistics as needed
+        st.subheader("Time Series Statistics")
+        st.markdown(
+            f"""
+            <div class="statistics-container">
+                <p>Selected Column: {selected_column}</p>
+                <p>Mean: {dff[selected_column].mean()}</p>
+                <p>Variance: {dff[selected_column].var()}</p>
+                <p>Minimum: {dff[selected_column].min()}</p>
+                <p>Maximum: {dff[selected_column].max()}</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
 # Decompose time series into trend and residual components
 if uploaded_file is not None:
