@@ -140,7 +140,7 @@ st.markdown(
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
 # Divide the space into two columns
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([2, 1])
 
 if uploaded_file is not None:
     # Load data
@@ -212,9 +212,3 @@ if uploaded_file is not None:
 if uploaded_file is not None:
     st.subheader(f"Decomposed Time Series for {selected_column}:")
     decompose_and_display(dff, selected_column)
-
-
-# TODO
-# 1. Load the model correctly
-# 2. Adjust the thresholds for the points classified as anomalies
-# 3. Display statistics on the main page in a styled container
