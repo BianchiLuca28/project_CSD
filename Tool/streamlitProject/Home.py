@@ -1,5 +1,5 @@
 # Launch the app using the following command (using the terminal):
-# python -m streamlit run app.py
+# python -m streamlit run Home.py
 import base64
 
 import streamlit as st
@@ -91,14 +91,15 @@ def classify_and_update_pie_chart(button, pie_chart, data, value_columns):
         # Display pie chart
         pie_chart.update_traces(values=[percentage_anomalies, 100 - percentage_anomalies])
 
-# Set page configuration to make the interface wider
-st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
-
-
 LOGO_IMAGE = "images/logo_sentry_transparent.png"
 LOGO_TITLE = "T-Sentry"
 UNICAM_LOGO = "images/logo_unicam.png"
 SCHNELL_LOGO = "images/logo_Schnell.png"
+
+st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
+
+# Create a Streamlit sidebar for navigation
+st.sidebar.header("Home")
 
 st.markdown(
     """
@@ -147,6 +148,16 @@ st.markdown(
         margin-bottom: 10px;
         border-radius: 5px;
     }
+    .sidebar-container {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+        margin: 5px 0;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -184,8 +195,8 @@ if uploaded_file is not None:
 
     # Value columns of the dataframe to be used
     value_columns = ['Board1Acc1', 'Board1Acc2', 'Board1Acc3',
-                   'Board2Acc1', 'Board2Acc2', 'Board2Acc3',
-                   'Board3Acc1', 'Board3Acc2', 'Board3Acc3']
+                'Board2Acc1', 'Board2Acc2', 'Board2Acc3',
+                'Board3Acc1', 'Board3Acc2', 'Board3Acc3']
 
     # Visualize time series
     with col1:
@@ -233,5 +244,6 @@ if uploaded_file is not None:
 
 # Decompose time series into trend and residual components
 if uploaded_file is not None:
+    st.divider()
     st.subheader(f"Decomposed Time Series for {selected_column}:")
     decompose_and_display(dff, selected_column)
