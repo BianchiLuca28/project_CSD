@@ -9,6 +9,8 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 import pickle
 import time
 
+import sklearn
+
 # Function to decompose time series and display sub-time series
 def decompose_and_display(data, selected_column):
     # Set 'time' as index for seasonal decomposition
@@ -99,7 +101,7 @@ SCHNELL_LOGO = "images/logo_Schnell.png"
 st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
 
 # Create a Streamlit sidebar for navigation
-st.sidebar.header("Home")
+st.sidebar.header(sklearn.__version__)
 
 st.markdown(
     """
