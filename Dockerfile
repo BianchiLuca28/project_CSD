@@ -1,5 +1,5 @@
 # Execute with: docker build -t streamlit .
-#         Then: docker run -p 8501:8501 streamlit
+#         Then: docker run -p 8501:8501 --name project_CSD streamlit
 
 FROM python:3.9-slim
 
@@ -16,7 +16,7 @@ RUN git clone https://github.com/Meguazy/project_CSD.git .
 
 RUN pip3 install -r requirements.txt
 
-RUN cd /app/project_CSD/Tool/streamlitProject
+WORKDIR /app/Tool/streamlitProject
 
 EXPOSE 8501
 
