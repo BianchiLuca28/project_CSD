@@ -49,8 +49,7 @@ if 'data' in st.session_state:
     # Plot the principal components
     fig = px.scatter(principalDf, x="principal_component_1", y="principal_component_2", title="Principal Components", 
                      color='prediction', labels={'principal_component_1': 'Principal Component 1', 'principal_component_2': 'Principal Component 2'}, 
-                     template='plotly')
-                    # color_discrete_map={"no_guasto": "blue", "guasto": "red"})
+                    color_discrete_map={"no_guasto": "#6ABDFF", "guasto": "#FF6A6A"})
     fig.for_each_trace(lambda t: t.update(name='Not Outlier' if t.name == 'no_guasto' else 'Outlier'))
     fig.update_layout(height=850)
 
