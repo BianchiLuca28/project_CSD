@@ -36,19 +36,16 @@ def decompose_and_display(data, selected_column):
     st.plotly_chart(fig, use_container_width=True)
 
 # Function to classify time series as anomaly or not
-@st.cache_data()
 def classify_and_update_plots(data, selected_column, value_columns, button):
     # Load and apply PCA to the time series
     with open('saved_models/pca_transformer.pkl', 'rb') as pca_file:
         pca = pickle.load(pca_file)
-        print("PCA loaded successfully!")
         principalComponents = pca.transform(data[value_columns])
         principalDf = pd.DataFrame(data = principalComponents, columns = ['principal_component_1', 'principal_component_2'])
 
     # Load the model
     with open('saved_models/pruned_classifier_model.pkl', 'rb') as model_file:
         model = pickle.load(model_file)
-        print("Model loaded successfully!")
         # Predict anomalies using principal components 1 and 2
         predictions = model.predict(principalDf)
         # Calculate the percentage of anomalies
@@ -70,9 +67,13 @@ def classify_and_update_plots(data, selected_column, value_columns, button):
     fig_pie_chart = go.Figure(go.Pie(labels=['Anomalies', 'Normal'], values=[0, 100], hole=0.3, marker_colors=['#FF6347', '#4CAF50']))
     fig_pie_chart.update_layout(width=300, height=300)
 
-    if button:
+    if button or ('percentage_anomalies' in st.session_state and st.session_state['file_classified'] == uploaded_file):
         # Display pie chart
         fig_pie_chart.update_traces(values=[percentage_anomalies, 100 - percentage_anomalies])
+        # Save the predictions to the session state (useful for PCA visualization page)
+        st.session_state['predictions'] = predictions
+        st.session_state['file_classified'] = uploaded_file
+        st.session_state['percentage_anomalies'] = percentage_anomalies
     
     if button and percentage_anomalies > 50:
         # Create a scatter plot for the entire time series
@@ -90,11 +91,7 @@ def classify_and_update_plots(data, selected_column, value_columns, button):
         # Add a line trace for the entire time series
         fig_time_series.add_trace(go.Scatter(x=data['Discrete_Time'], y=data[selected_column], mode='lines', name='Time Series'))
         fig_time_series.update_layout(showlegend=True)
-
-        
-
     return fig_time_series, fig_pie_chart, percentage_anomalies
-
 
 
 LOGO_IMAGE = "Tool/streamlitProject/images/logo_sentry_transparent.png"
@@ -199,6 +196,9 @@ if uploaded_file is not None:
     df = pd.read_csv(uploaded_file, sep=";")
     dff = df.copy()
 
+    # Save the dataset to a session variable
+    st.session_state['data'] = dff
+
     # Value columns of the dataframe to be used
     value_columns = ['Board1Acc1', 'Board1Acc2', 'Board1Acc3',
                 'Board2Acc1', 'Board2Acc2', 'Board2Acc3',
@@ -221,7 +221,7 @@ if uploaded_file is not None:
 
     # On the second column add the classifier and the button to classify the time series
     with col2:
-        st.subheader("Classify Time Series:")
+        st.subheader("Classify Time Series")
 
         # Create a button to trigger classification
         classify_button = st.button("Classify Time Series")
@@ -261,5 +261,5 @@ if uploaded_file is not None:
 # Decompose time series into trend and residual components
 if uploaded_file is not None:
     st.divider()
-    st.subheader(f"Decomposed Time Series for {selected_column}:")
+    st.subheader(f"Decomposed Time Series for {selected_column}")
     decompose_and_display(dff, selected_column)
