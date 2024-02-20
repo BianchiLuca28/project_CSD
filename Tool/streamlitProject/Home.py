@@ -1,5 +1,6 @@
 # Launch the app using the following command (using the terminal):
-# python -m streamlit run Home.py
+# python -m streamlit run Tool/streamlitProject/Home.py
+
 import base64
 
 import streamlit as st
@@ -7,7 +8,6 @@ import pandas as pd
 import plotly.graph_objects as go
 from statsmodels.tsa.seasonal import seasonal_decompose
 import pickle
-import time
 
 # Function to decompose time series and display sub-time series
 def decompose_and_display(data, selected_column):
@@ -35,66 +35,72 @@ def decompose_and_display(data, selected_column):
 
     st.plotly_chart(fig, use_container_width=True)
 
-# Function to load and visualize time series data with Plotly
-def visualize_time_series(data, selected_column):
-    # Calculate Q1 and Q3
-    Q1 = data[selected_column].quantile(0.25)
-    Q3 = data[selected_column].quantile(0.75)
-    IQR = Q3 - Q1
-
-    # Define bounds for outliers
-    lower_bound = Q1 - 1.5 * IQR
-    upper_bound = Q3 + 1.5 * IQR
-
-    # Identify points outside the bounds
-    outliers = data[(data[selected_column] < lower_bound) | (data[selected_column] > upper_bound)]
-
-    # Create a scatter plot for the entire time series
-    fig = go.Figure()
-
-    # Add a line trace for the entire time series
-    fig.add_trace(go.Scatter(x=data['Discrete_Time'], y=data[selected_column], mode='lines', name='Time Series'))
-
-    # Add scatter trace for outliers
-    fig.add_trace(
-        go.Scatter(x=outliers['Discrete_Time'], y=outliers[selected_column], mode='markers', marker=dict(color='red'),
-                   name='Outliers'))
-
-    # Set layout options
-    fig.update_layout(showlegend=True)
-
-    st.subheader(f"Time Series Visualization for {selected_column}:")
-    st.plotly_chart(fig, use_container_width=True)
-
 # Function to classify time series as anomaly or not
-def classify_and_update_pie_chart(button, pie_chart, data, value_columns):
-    # Add a button to classify time series as anomaly or not
-    if button:
-        # Load the model
-        with open('../../saved_models/pruned_classifier_model.pkl', 'rb') as model_file:
-            model = pickle.load(model_file)
-            print("Model loaded successfully!")
-        
-        # Load and apply PCA to the time series
-        with open('../../saved_models/pca_transformer.pkl', 'rb') as pca_file:
-            pca = pickle.load(pca_file)
-            print("PCA loaded successfully!")
-            principalComponents = pca.transform(data[value_columns])
-            principalDf = pd.DataFrame(data = principalComponents, columns = ['principal_component_1', 'principal_component_2'])
+@st.cache_data()
+def classify_and_update_plots(data, selected_column, value_columns, button):
+    # Load and apply PCA to the time series
+    with open('saved_models/pca_transformer.pkl', 'rb') as pca_file:
+        pca = pickle.load(pca_file)
+        print("PCA loaded successfully!")
+        principalComponents = pca.transform(data[value_columns])
+        principalDf = pd.DataFrame(data = principalComponents, columns = ['principal_component_1', 'principal_component_2'])
 
+    # Load the model
+    with open('saved_models/pruned_classifier_model.pkl', 'rb') as model_file:
+        model = pickle.load(model_file)
+        print("Model loaded successfully!")
         # Predict anomalies using principal components 1 and 2
         predictions = model.predict(principalDf)
-        
         # Calculate the percentage of anomalies
         percentage_anomalies = (predictions == "guasto").sum() / len(predictions) * 100
 
-        # Display pie chart
-        pie_chart.update_traces(values=[percentage_anomalies, 100 - percentage_anomalies])
+        # Compute outliers
+        # Calculate Q1 and Q3
+        Q1 = data[selected_column].quantile(0.25)
+        Q3 = data[selected_column].quantile(0.75)
+        IQR = Q3 - Q1
 
-LOGO_IMAGE = "images/logo_sentry_transparent.png"
+        # Define bounds for outliers
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+
+        # Identify points outside the bounds
+        outliers = data[(data[selected_column] < lower_bound) | (data[selected_column] > upper_bound)]
+
+    fig_pie_chart = go.Figure(go.Pie(labels=['Anomalies', 'Normal'], values=[0, 100], hole=0.3, marker_colors=['#FF6347', '#4CAF50']))
+    fig_pie_chart.update_layout(width=300, height=300)
+
+    if button:
+        # Display pie chart
+        fig_pie_chart.update_traces(values=[percentage_anomalies, 100 - percentage_anomalies])
+    
+    if button and percentage_anomalies > 50:
+        # Create a scatter plot for the entire time series
+        fig_time_series = go.Figure()
+        # Add a line trace for the entire time series
+        fig_time_series.add_trace(go.Scatter(x=data['Discrete_Time'], y=data[selected_column], mode='lines', name='Time Series'))
+        # Add scatter trace for outliers
+        fig_time_series.add_trace(
+            go.Scatter(x=outliers['Discrete_Time'], y=outliers[selected_column], mode='markers', marker=dict(color='red'),
+                    name='Outliers'))
+        fig_time_series.update_layout(showlegend=True)
+    else:
+        # Create a scatter plot for the entire time series
+        fig_time_series = go.Figure()
+        # Add a line trace for the entire time series
+        fig_time_series.add_trace(go.Scatter(x=data['Discrete_Time'], y=data[selected_column], mode='lines', name='Time Series'))
+        fig_time_series.update_layout(showlegend=True)
+
+        
+
+    return fig_time_series, fig_pie_chart, percentage_anomalies
+
+
+
+LOGO_IMAGE = "Tool/streamlitProject/images/logo_sentry_transparent.png"
 LOGO_TITLE = "T-Sentry"
-UNICAM_LOGO = "images/logo_unicam.png"
-SCHNELL_LOGO = "images/logo_Schnell.png"
+UNICAM_LOGO = "Tool/streamlitProject/images/logo_unicam.png"
+SCHNELL_LOGO = "Tool/streamlitProject/images/logo_Schnell.png"
 
 st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
 
@@ -200,15 +206,19 @@ if uploaded_file is not None:
 
     # Visualize time series
     with col1:
-        st.subheader("Time Series Visualization:")
+        st.subheader("Time Series Visualization")
+
         # Allow user to choose the column to visualize
-        selected_column = st.selectbox("Select a column to visualize", value_columns)
+        selected_column = st.selectbox("Select a column to visualize:", value_columns)
+
+        plot_result, _, _ = classify_and_update_plots(dff, selected_column, value_columns, False)
+
+        plot_holder = st.empty()
 
         # Visualize time series
-        visualize_time_series(dff, selected_column)
+        plot_holder.plotly_chart(plot_result, use_container_width=True)
 
-# Classify data
-if uploaded_file is not None:
+
     # On the second column add the classifier and the button to classify the time series
     with col2:
         st.subheader("Classify Time Series:")
@@ -216,17 +226,22 @@ if uploaded_file is not None:
         # Create a button to trigger classification
         classify_button = st.button("Classify Time Series")
 
-        # Create an initially empty pie chart
-        pie_chart = go.Figure(go.Pie(labels=['Anomalies', 'Normal'], values=[0, 100], hole=0.3, marker_colors=['#FF6347', '#4CAF50']))
-        pie_chart.update_layout(width=300, height=300)
-
         st.subheader("Time Series Classification")
 
         # Perform classification and update the pie chart
-        classify_and_update_pie_chart(classify_button, pie_chart, dff, value_columns)
+        plot_result, pie_chart_result, percentage_anomalies = classify_and_update_plots(dff, selected_column, value_columns, classify_button)
+
+        if classify_button and percentage_anomalies > 50:
+            st.error(f"Result: Time series is an anomaly!")
+        elif classify_button and percentage_anomalies <= 50:
+            st.success(f"Result: Time series is normal!")
+
+        if classify_button:
+            with col1:
+                plot_holder.plotly_chart(plot_result, use_container_width=True)
 
         # Display the pie chart
-        st.plotly_chart(pie_chart, use_container_width=True)
+        st.plotly_chart(pie_chart_result, use_container_width=True)
         
         st.subheader("Time Series Statistics")
         st.markdown(
@@ -241,6 +256,7 @@ if uploaded_file is not None:
             """,
             unsafe_allow_html=True
         )
+
 
 # Decompose time series into trend and residual components
 if uploaded_file is not None:
