@@ -2,7 +2,7 @@
 ![Logo](https://www.schnell.it/footer/01_Schnell.png)
 
 
-# Detecting anomalities in Time Series
+# Detecting anomalies in Time Series
 
 This project is a collaboration with Schnell S.p.A, we explored different Machine Learning tecniques to detect anomalities in time series data produced by different sensor mounted on a special machinery. 
 
@@ -24,25 +24,19 @@ This project is a collaboration with Schnell S.p.A, we explored different Machin
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/Meguazy/project_CSD
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  docker docker build -t streamlit .
 ```
 
-Install dependencies
+Start the image
 
 ```bash
-  npm install
-```
-
-Start the server
-
-```bash
-  npm run start
+  docker run -p 8501:8501 --name project_CSD streamlit
 ```
 
 
