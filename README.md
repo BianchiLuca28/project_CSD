@@ -1,6 +1,4 @@
-
-![Logo](https://www.schnell.it/gallery-schnell/news/SchnellSPA_2018.jpg)
-
+![Logo](https://www.schnell.it/logo.png)
 
 # Detecting anomalies in Time Series
 
@@ -38,7 +36,7 @@ Finally, start the image
 ```bash
   docker run -p 8501:8501 --name project_CSD streamlit
 ```
-
+From here, you should be able to 
 
 ## FAQ
 
@@ -52,8 +50,6 @@ Answer 2
 
 
 ## Badges
-
-Add badges from somewhere like: [shields.io](https://shields.io/)
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
