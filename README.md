@@ -1,5 +1,5 @@
 
-![Logo](https://www.schnell.it/footer/01_Schnell.png)
+![Logo](https://www.schnell.it/gallery-schnell/news/SchnellSPA_2018.jpg)
 
 
 # Detecting anomalies in Time Series
@@ -27,13 +27,13 @@ Clone the project
   git clone https://github.com/Meguazy/project_CSD
 ```
 
-Go to the project directory
+From the root directory, execute the following to build the image
 
 ```bash
   docker docker build -t streamlit .
 ```
 
-Start the image
+Finally, start the image
 
 ```bash
   docker run -p 8501:8501 --name project_CSD streamlit
