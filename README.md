@@ -1,5 +1,3 @@
-![Logo](https://www.schnell.it/logo.png)
-
 # Detecting anomalies in Time Series
 
 This project is a collaboration with Schnell S.p.A, we explored different Machine Learning tecniques to detect anomalities in time series data produced by different sensor mounted on a special machinery. 
