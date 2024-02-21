@@ -34,7 +34,12 @@ Finally, start the image
 ```bash
   docker run -p 8501:8501 --name project_CSD streamlit
 ```
-From here, you should be able to 
+
+From here, connect to the following link on your browser to use the app 
+
+```bash
+  locahost:8501
+```
 
 ## FAQ
 
