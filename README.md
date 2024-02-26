@@ -45,13 +45,14 @@ From here, connect to the following link on your browser to use the app
 
 ## FAQ
 
-#### Question 1
+#### Which preprocessing did we apply?
+We've used L2 normalization in order to reduce the number of this series for accelerometer to 1 and StandardScaling to be able to analyze data on the same scale.
 
-Answer 1
+#### How did we classify the faulty acquisition?
+We've used the CART algorithm and applied a Decision Tree on the data. Since we had labeled data we were able to apply a supervised learning algorithm
 
-#### Question 2
-
-Answer 2
+#### How did we find anomaly points on faulty acquisitions?
+We've used statistical method such analyzing the points outside of the standard deviation range.
 
 
 ## Badges
