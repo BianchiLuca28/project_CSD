@@ -11,8 +11,8 @@ This project is a collaboration with Schnell S.p.A, we explored different Machin
 - [@Luca Bianchi](https://github.com/BianchiLuca28)
 
 ## Documentation
-
-[Documentation](https://drive.google.com/file/d/1yRoNmiyTgJKQRJEjwGaD6Xc2AcvF08Yq/view?usp=sharing)
+Here we can find the documentation for the project. We explain in details the various steps of the process, starting from a description of the starting dataset and ending with the creation and the validation of the model.
+The docs can be found here: Documentation](https://drive.google.com/file/d/1yRoNmiyTgJKQRJEjwGaD6Xc2AcvF08Yqview?usp=sharing).
 
 
 ## Run Locally
