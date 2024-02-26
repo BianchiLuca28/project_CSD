@@ -42,6 +42,11 @@ From here, connect to the following link on your browser to use the app
 ```bash
   locahost:8501
 ```
+Another way to access the app is via this link
+
+```bash
+  https://projectcsd.streamlit.app/
+```
 
 ## FAQ
 
