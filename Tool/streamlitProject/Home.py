@@ -101,8 +101,6 @@ SCHNELL_LOGO = "Tool/streamlitProject/images/logo_Schnell.png"
 
 st.set_page_config(page_title="T-Sentry", page_icon="📈", layout="wide")
 
-st.session_state.update(st.session_state)
-
 # Create a Streamlit sidebar for navigation
 st.sidebar.header("Home")
 

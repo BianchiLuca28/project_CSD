@@ -17,8 +17,6 @@ def compute_pca(data):
 
 st.set_page_config(page_title="PCA Visualization", page_icon="📈", layout="wide")
 
-st.session_state.update(st.session_state)
-
 value_columns = ['Board1Acc1', 'Board1Acc2', 'Board1Acc3',
                 'Board2Acc1', 'Board2Acc2', 'Board2Acc3',
                 'Board3Acc1', 'Board3Acc2', 'Board3Acc3']
