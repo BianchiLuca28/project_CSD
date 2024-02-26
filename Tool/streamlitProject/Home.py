@@ -132,7 +132,7 @@ st.markdown(
         height: 150px;
     }
     .company-logo-img {
-        max-height: 100px; 
+        max-height: 85px; 
         width: auto;
         margin-bottom: 10px; 
     }
