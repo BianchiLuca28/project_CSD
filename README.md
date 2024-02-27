@@ -69,6 +69,9 @@ This is what you will see after you've uploaded a sample
 
 From here you can either classify the time series, browse the app to get some statistical and analytical informations or you can click on the "PCA visualization" tab to get more info about the classified points for said acquisition. There also is an "About Us" page in which we you can find some informations about us creators of the project.
 
+## About the Data directory
+This data is deprecated data that we no longer use. We let it live on the repository only because if we didn't the older versions of the notebooks would not be runnable.
+
 ## FAQ
 
 #### Which preprocessing did we apply?
