@@ -54,6 +54,7 @@ Another way to access the app is via this link
 ## Tool usage description
 In order to correctly use the tool you need to have the repository cloned locally. 
 Once you either click the web link or build the image locally with Docker, you will be welcomed by this home screen:
+
 ![Home Page](https://github.com/Meguazy/project_CSD/blob/main/Tool/streamlitProject/images/home_page?raw=true)
 
 In order to analyze a time serie you have click on browse files and then you have to choose one of the samples located in the repository under 
@@ -61,8 +62,14 @@ In order to analyze a time serie you have click on browse files and then you hav
 ```bash
   /Tool/streamlitProject/samples/
 ```
+
 This is what you will see after you've uploaded a sample
+
 ![Sample uploaded](https://github.com/Meguazy/project_CSD/blob/main/Tool/streamlitProject/images/uploaded_series?raw=true)
+
+From here you can either classify the time series, browse the app to get some statistical and analytical informations or you can click on the "PCA visualization" tab to get more info about the classified points for said acquisition. There also is an "About Us" page in which we you can find some informations about us creators of the project.
+
+## Project structure description
 
 
 ## FAQ
