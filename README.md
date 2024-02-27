@@ -31,7 +31,7 @@ Clone the project
 From the root directory, execute the following to build the image
 
 ```bash
-  docker docker build -t streamlit .
+  docker build -t streamlit .
 ```
 
 Finally, start the image
