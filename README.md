@@ -57,7 +57,7 @@ Once you either click the web link or build the image locally with Docker, you w
 
 ![Home Page](https://github.com/Meguazy/project_CSD/blob/main/Tool/streamlitProject/images/home_page?raw=true)
 
-In order to analyze a time serie you have click on browse files and then you have to choose one of the samples located in the repository under 
+To analyze a time serie you have click on browse files and then you have to choose one of the samples located in the repository under 
 
 ```bash
   /Tool/streamlitProject/samples/
