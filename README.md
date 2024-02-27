@@ -12,7 +12,7 @@ This project is a collaboration with Schnell S.p.A, we explored different Machin
 
 ## Documentation
 Here we can find the documentation for the project. We explain in details the various steps of the process, starting from a description of the starting dataset and ending with the creation and the validation of the model.
-The docs can be found at this link: [Documentation](https://drive.google.com/file/d/1yRoNmiyTgJKQRJEjwGaD6Xc2AcvF08Yqview?usp=sharing).
+The docs can be found at this link: [Documentation](https://drive.google.com/file/d/1yRoNmiyTgJKQRJEjwGaD6Xc2AcvF08Yq/view?usp=sharing).
 
 ## Presentation
 Here we can find the slides for the presentation of the project: [Presentation](https://unicamit-my.sharepoint.com/:p:/g/personal/stanislav_teghipco_studenti_unicam_it/EeYaSQk9lTdNvvI-N101UtYB6rhWWFd0QLN8m8f8Imn9zw?e=aGzivB)
