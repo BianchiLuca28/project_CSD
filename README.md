@@ -48,7 +48,7 @@ From here, connect to the following link on your browser to use the app
 
 ## Access via the web link
 
-Another way to access the app is via this link
+Another way to access the app is via this link that has been deployed on the StreamLit hosting service
 
 ```bash
   https://projectcsd.streamlit.app/
