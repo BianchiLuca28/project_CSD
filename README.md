@@ -54,7 +54,7 @@ Another way to access the app is via this link
 ## Tool usage description
 In order to correctly use the tool you need to have the repository cloned locally. 
 Once you either click the web link or build the image locally with Docker, you will be welcomed by this home screen:
-
+[Home Page](Tool/streamlitProject/images/Screenshot 2024-02-27 at 09.36.18.png)
 
 ## FAQ
 
