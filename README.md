@@ -42,6 +42,9 @@ From here, connect to the following link on your browser to use the app
 ```bash
   locahost:8501
 ```
+
+## Access via the web link
+
 Another way to access the app is via this link
 
 ```bash
