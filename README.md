@@ -72,6 +72,9 @@ From here you can either classify the time series, browse the app to get some st
 ## About the Data directory
 This data is deprecated data that we no longer use. We let it live on the repository only because if we didn't the older versions of the notebooks would not be runnable.
 
+## About the python scripts directory
+Here you can find scripts for the preprocessing of the files, such as cleaning, merging and organization of the various datasets.
+
 ## FAQ
 
 #### Which preprocessing did we apply?
