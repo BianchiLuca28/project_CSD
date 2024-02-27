@@ -48,6 +48,11 @@ Another way to access the app is via this link
   https://projectcsd.streamlit.app/
 ```
 
+## Tool usage description
+In order to correctly use the tool you need to have the repository cloned locally. 
+Once you either click the web link or build the image locally with Docker, you will be welcomed by this home screen:
+
+
 ## FAQ
 
 #### Which preprocessing did we apply?
