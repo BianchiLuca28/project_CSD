@@ -62,7 +62,7 @@ In order to analyze a time serie you have click on browse files and then you hav
   /Tool/streamlitProject/samples/
 ```
 This is what you will see after you've uploaded a sample
-![Sample uploaded](https://github.com/Meguazy/project_CSD/blob/main/Tool/streamlitProject/images/home_page?raw=true)
+![Sample uploaded](https://github.com/Meguazy/project_CSD/blob/main/Tool/streamlitProject/images/uploaded_series?raw=true)
 
 
 ## FAQ
